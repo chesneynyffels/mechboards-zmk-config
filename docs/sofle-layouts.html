@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Algemeen overzicht van alle Sofle ZMK-lagen, hun activering en volledige toetsenbordindeling.">
+  <title>Sofle · alle lagen</title>
+  <style>
+    :root { color-scheme:light dark; --bg:#f6f7f9; --surface:#fff; --text:#17202c; --muted:#596575; --line:#d3d9e2; --blue:#dceaff; --orange:#ffead5; --green:#dcf2e6; --off:#e9ecf0; --accent:#235fc7; --key-shadow:#c7ced9; }
+    @media(prefers-color-scheme:dark) { :root { --bg:#151920; --surface:#1d242e; --text:#edf1f8; --muted:#b4bece; --line:#485264; --blue:#253e61; --orange:#4d3826; --green:#253f35; --off:#272d37; --accent:#9bbfff; --key-shadow:#10141b; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(1180px,100%); margin:auto; padding:36px 24px 64px; }
+    h1,h2,h3,p { margin:0; } h1 { font-size:clamp(28px,5vw,42px); font-weight:650; letter-spacing:-.035em; line-height:1.15; }
+    h2 { font-size:24px; letter-spacing:-.02em; } h3 { font-size:18px; font-weight:600; }
+    a { color:var(--accent); text-underline-offset:3px; } code,pre { font-family:ui-monospace,Consolas,monospace; }
+    code { overflow-wrap:anywhere; } pre { white-space:pre-wrap; overflow-wrap:anywhere; background:var(--off); padding:16px; border-radius:8px; font-size:13px; }
+    .eyebrow { font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+    .intro { max-width:780px; margin-top:16px; } .muted { color:var(--muted); } .small { font-size:13px; }
+    .source { margin-top:12px; font-size:13px; color:var(--muted); overflow-wrap:anywhere; }
+    .nav { display:flex; gap:20px; flex-wrap:wrap; margin:24px 0 32px; }
+    section + section { margin-top:48px; padding-top:32px; border-top:1px solid var(--line); }
+    .section-head { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:end; margin-bottom:20px; }
+    .section-head p { margin-top:6px; }
+    .control { display:flex; flex-direction:column; gap:5px; font-size:13px; }
+    select,button { font:inherit; color:var(--text); } select { background:var(--surface); border:1px solid var(--line); border-radius:7px; padding:9px 12px; max-width:100%; }
+    button { cursor:pointer; } button:focus-visible,select:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    .pair,.split { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:40px; }
+    .board-caption { margin-bottom:12px; } .board-caption p { font-size:13px; color:var(--muted); margin-top:3px; }
+    .keyboard { --unit:64px; min-width:0; }
+    .matrix { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; padding-bottom:calc(var(--unit)*.55); }
+    .key { border:1px solid var(--line); border-bottom:3px solid var(--key-shadow); background:var(--surface); border-radius:7px; width:100%; aspect-ratio:1; padding:3px; display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:0; position:relative; }
+    .key .name { font-size:clamp(12px,1.5vw,17px); font-weight:600; line-height:1.1; overflow-wrap:anywhere; max-width:100%; text-align:center; }
+    .key .physical { font-size:11px; line-height:1.05; color:var(--muted); margin-top:4px; }
+    .key.movement { background:var(--blue); } .key.modifier { background:var(--orange); } .key.layer { background:var(--green); } .key.off { background:var(--off); }
+    .key.inherited .name::before { content:'↳ '; font-weight:400; }
+    .key.selected { outline:2px solid var(--accent); outline-offset:1px; }
+    .thumbs { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; margin-top:12px; padding-bottom:calc(var(--unit)*.22); }
+    .aux { display:flex; gap:10px; align-items:center; justify-content:flex-end; min-height:50px; margin-top:7px; }
+    .keyboard.right .aux { justify-content:flex-start; }
+    .aux .key { flex:0 0 48px; width:48px; aspect-ratio:1; border-radius:50%; }
+    .aux .name { font-size:11px; }
+    .legend { display:flex; flex-wrap:wrap; gap:12px 22px; margin-top:20px; font-size:13px; }
+    .legend span { display:inline-flex; align-items:center; gap:7px; }
+    .swatch { width:13px; height:13px; border-radius:3px; background:var(--blue); }
+    .swatch.mod { background:var(--orange); } .swatch.layer { background:var(--green); }
+    .inspector { border-top:1px solid var(--line); margin-top:22px; padding-top:18px; }
+    .notes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:30px; margin-top:24px; }
+    .notes p { margin-top:7px; } ol { padding-left:24px; } li { padding-left:4px; margin-bottom:14px; }
+    details { margin-top:18px; } summary { cursor:pointer; font-weight:600; } footer { margin-top:42px; font-size:13px; color:var(--muted); }
+    .code-toolbar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+    .action { background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:8px 12px; }
+    .table-wrap { max-width:100%; overflow:auto; } table { width:100%; border-collapse:collapse; margin-top:12px; font-size:14px; } th,td { border-bottom:1px solid var(--line); text-align:left; padding:9px 12px 9px 0; vertical-align:top; }
+    @media(max-width:760px) { main { padding:24px 16px 40px; } .pair,.split,.notes { grid-template-columns:minmax(0,1fr); gap:28px; } .section-head { align-items:start; } .key .name { font-size:14px; } .key .physical { font-size:11px; } .nav { gap:12px 18px; } }
+    @media(max-width:360px) { main { padding-left:12px; padding-right:12px; } .matrix,.thumbs { gap:4px; } .key .name { font-size:12px; } .key .physical { font-size:10px; } }
+    @media print { body { background:#fff; color:#111; } main { max-width:none; padding:0; } .nav,.code-toolbar,.control { display:none; } .key { break-inside:avoid; } section { break-inside:auto; } .pair,.split { grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; } }
+
+    .layer-section { margin-top:40px; padding-top:28px; border-top:1px solid var(--line); scroll-margin-top:20px; }
+    .overview-controls { margin:22px 0 12px; align-items:center; }
+    .overview-controls .legend { margin:0; }
+    .layer-meta { display:grid; grid-template-columns:100px minmax(0,1fr); gap:9px 18px; margin:0 0 20px; max-width:1000px; }
+    .layer-meta dt { font-weight:600; } .layer-meta dd { margin:0; }
+    .layer-note { margin:0 0 18px; color:var(--muted); max-width:960px; font-size:14px; }
+    .layer-section .key { aspect-ratio:1.15; }
+    .layer-section .aux .key { aspect-ratio:1; }
+    @media(max-width:760px){ .layer-meta { grid-template-columns:82px minmax(0,1fr); gap:8px 10px; font-size:14px; } }
+    @media print { .layer-section { break-before:page; } .key { box-shadow:none; } }
+
+    [hidden] { display:none !important; }
+    .key.edited::after { content:'•'; position:absolute; top:0; right:5px; color:var(--accent); font-size:18px; }
+    .key-editor { margin-top:14px; display:grid; gap:8px; }
+    .key-editor > label { font-weight:600; font-size:14px; }
+    .editor-controls { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+    .editor-controls input { font:inherit; font-size:16px; min-width:0; width:230px; max-width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--text); }
+    .editor-controls input:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+    .edit-error { color:light-dark(#a51c24,#ffabb0); min-height:0; }
+    .report-label { margin:12px 0 6px; }
+    #changes-report { display:block; width:100%; resize:vertical; padding:12px; font:13px/1.6 ui-monospace,Consolas,monospace; border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--text); }
+    #storage-status:not(:empty) { margin-top:10px; }
+    button:disabled { opacity:.55; cursor:default; }
+    @media print { #your-changes,.key-editor { display:none; } }
+
+    .capture-field { border-color:var(--accent) !important; }
+    .capture-status { min-height:62px; }
+    .manual-entry { margin-top:8px; }
+    .manual-entry > label { display:block; margin:10px 0 6px; font-size:14px; }
+    .manual-entry .small { margin-top:7px; }
+    .system-keys { min-width:0; margin:0; padding:0; border:0; }
+    .system-keys legend { margin-bottom:6px; font-size:14px; font-weight:600; }
+    .system-key-buttons { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:8px; margin-top:10px; }
+    .behavior-buttons { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .behavior-buttons .action[aria-pressed="true"] { background:var(--green); }
+    .layer-mode-grid { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0; }
+    .layer-mode-grid .control { flex:1 1 180px; min-width:0; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Mechboards · ZMK-configuratie</p>
+    <h1>Sofle · alle lagen</h1>
+    <p class="intro">Per laag: waarvoor ze dient, hoe je ze activeert en de volledige indeling van beide helften. Klik op een toets in de layout en druk de gewenste toets op je toetsenbord. De wijziging wordt meteen geregistreerd; kopieer daarna de lijst om ze in de chat door te geven.</p>
+    <p class="source">Configuratie: BASE, LOWER, RAISE en GAME. De oude instellingenlaag is verwijderd. De nummering hieronder start bij 1; ZMK telt vanaf index 0.</p>
+    <nav class="nav" id="layer-nav" aria-label="Ga naar een laag"></nav>
+    <div class="table-wrap"><table><thead><tr><th>Laag</th><th>Naam</th><th>Activeren</th><th>Type</th></tr></thead><tbody id="overview-rows"></tbody></table></div>
+    <div class="section-head overview-controls">
+      <div class="legend"><span><i class="swatch mod" aria-hidden="true"></i>Modifiers</span><span><i class="swatch layer" aria-hidden="true"></i>Laagtoetsen</span><span>— uitgeschakeld</span><span>↳ geërfd uit een lagere laag</span></div>
+      <label class="control">Transparante toetsen<select id="transparency"><option value="effective">Toon uiteindelijke functie</option><option value="raw">Toon transparant als ▽</option></select></label>
+    </div>
+    <p class="small muted">Schematische QWERTY-posities. De bediening op deze pagina verandert alleen de weergave.</p>
+  </header>
+
+  <section id="your-changes" aria-labelledby="changes-heading">
+    <div class="section-head"><div><h2 id="changes-heading">Jouw toetswijzigingen</h2><p class="muted">Selecteer hieronder een toets en druk de gewenste toets op je toetsenbord. Je hoeft niets te typen of te bevestigen.</p></div><span class="small" id="changes-count" role="status">0 wijzigingen</span></div>
+    <p class="small muted">Je wijzigingen blijven in deze browser bewaard. Gebruik “Kopieer wijzigingen” om de lijst in de chat te plakken. De .keymap en je toetsenbord veranderen hierdoor niet.</p>
+    <details id="changes-details"><summary>Wijzigingen bekijken en doorgeven</summary>
+      <label class="control report-label" for="changes-report">Deze tekst kun je in de chat plakken</label>
+      <textarea id="changes-report" readonly rows="6" spellcheck="false"></textarea>
+      <div class="code-toolbar"><button type="button" class="action" id="copy-changes">Kopieer wijzigingen</button><span id="changes-copy-status" class="small muted" role="status"></span></div>
+    </details>
+    <p class="small muted" id="storage-status" role="status"></p>
+  </section>
+
+  <div id="layer-overview"></div>
+
+  <section id="technical" aria-labelledby="technical-title">
+    <h2 id="technical-title">Bron &amp; onderhoud</h2>
+    <p class="source" id="source"></p>
+    <p class="intro small muted">Dit overzicht volgt <a href="../config/sofle.keymap">config/sofle.keymap</a>. Die is gebaseerd op de vermelde Git-commit, met de persoonlijke toetscorrecties die je in deze chat hebt doorgegeven. De firmware wordt via GitHub Actions gebouwd; de indeling op je toetsenbord verandert pas na het flashen. De keymap gebruikt gamingvariant A.</p>
+    <details><summary>Deze infopagina bijwerken</summary>
+      <p class="intro">Bewaar dit bestand bijvoorbeeld als <code>docs/sofle-layouts.html</code>. Het werkt offline, zonder installatie of externe bibliotheken.</p>
+      <ol><li>De vier lagen staan in <code>&lt;script id="keymap-data" type="application/json"&gt;</code>, met 60 bindings per laag in dezelfde volgorde als de .keymap.</li><li>De namen en activeringsinstructies staan in <code>LAYER_INFO</code>. <code>makeGame()</code> gebruikt de GAME-bindings uit dezelfde gegevens; variant B wijzigt alleen drie posities.</li><li>Werk bij een firmwarewijziging ook de gegevens en de broncommit bij. Deze pagina leest GitHub niet automatisch uit en schrijft niets terug.</li></ol>
+    </details>
+    <details><summary>De keymap gebruiken</summary>
+      <ol><li>Vervang <code>config/sofle.keymap</code> in je eigen repository door de <a href="../config/sofle.keymap">bijgeleverde keymap</a>. De persoonlijke toetsen naast P en / zijn bijgewerkt. LOWER biedt functietoetsen en navigatie links; LOWER linksboven activeert GAME; F12 staat op LOWER rechts naast P.</li><li>De oude ADJUST-definitie, de volledige ADJUST-laag en de automatische LOWER + RAISE-regel zijn verwijderd. GAME is nu index 3. Bluetooth-instellingen blijven beschikbaar op RAISE.</li><li>Bouw en flash via je bestaande werkwijze. Opgeslagen ZMK Studio-bindings kunnen voorrang krijgen; bewaar je actuele instellingen voordat je stock settings herstelt. Laat alle toetsen los bij het wisselen van laag.</li></ol>
+      <p class="small muted">Dit is de gedocumenteerde configuratie. Het wisselen van variant op deze pagina past het .keymap-bestand niet aan. A staat in het bijgeleverde bestand; voor B kun je het onderstaande gaming_layer-blok overnemen.</p>
+      <div class="code-toolbar"><button type="button" class="action" id="copy-code">Kopieer gaming_layer</button><span class="small muted" id="copy-status" role="status"></span></div><pre><code id="game-code"></code></pre>
+    </details>
+    <details><summary>Firmware bouwen en flashen · nice!nano v2</summary>
+      <ol><li>Open <a href="https://github.com/chesneynyffels/mechboards-zmk-config/actions?query=branch%3Arefresh_mips">GitHub Actions voor refresh_mips</a>. Open de geslaagde build en download het artifact <code>firmware</code>. Pak de ZIP uit.</li><li>Kies de twee <code>.uf2</code>-bestanden met <code>sofle_left</code> en <code>sofle_right</code> in de naam, voor <code>nice_nano_v2</code>.</li><li>Verbind de linkerhelft met een USB-datakabel. Druk de resetknop tweemaal snel in. Er verschijnt een schijf <code>NICENANO</code>.</li><li>Kopieer de linker Sofle-UF2 naar die schijf. De schijf verdwijnt en de controller herstart zodra het flashen klaar is.</li><li>Herhaal dit voor de rechterhelft met de rechter Sofle-UF2. Zet daarna beide helften aan en test eerst via USB op de linkerhelft.</li></ol>
+      <p class="small muted">Blijft de oude indeling actief door opgeslagen ZMK Studio-aanpassingen? Verbind de linkerhelft via USB met <a href="https://zmk.studio/">ZMK Studio</a> en kies <strong>Restore Stock Settings</strong> om de indeling uit de nieuwe firmware te laden.</p>
+      <p class="intro small">Bronnen: <a href="https://zmk.dev/docs/user-setup#install-the-firmware">ZMK flashen</a>, <a href="https://nicekeyboards.com/docs/nice-nano/getting-started/#flashing-firmware-and-bootloaders">nice!nano-bootloader</a> en <a href="https://zmk.dev/docs/features/studio#keymap-changes">ZMK Studio-keymap</a>.</p>
+    </details>
+    <details><summary>Volgorde van de 60 posities</summary><pre>0–5    bovenste rij links       6–11   bovenste rij rechts
+12–17  tweede rij links         18–23  tweede rij rechts
+24–29  derde rij links          30–35  derde rij rechts
+36–41  vierde rij links         42–43  drukknoppen draaiknoppen
+44–49  vierde rij rechts        50–54  onderste rij links
+55–59  onderste rij rechts</pre></details>
+    <p class="intro small">ZMK-documentatie: <a href="https://zmk.dev/docs/keymaps/behaviors/layers">lagen en &amp;to</a> · <a href="https://zmk.dev/docs/keymaps/behaviors/misc">&amp;none en &amp;trans</a> · <a href="https://zmk.dev/docs/features/studio">ZMK Studio</a>.</p>
+  </section>
+  <footer>De uitvoer van symbolen hangt ook af van de toetsenbordindeling van je besturingssysteem.</footer>
+</main>
+
+<!-- MAINTENANCE: source snapshot, raw ZMK bindings in physical order (60 per layer). -->
+<script id="keymap-data" type="application/json">
+{
+  "source": {
+    "branch": "refresh_mips",
+    "commit": "f33c8122b4c77cba9d39e8ca2bf7946b1bf16be8",
+    "file": "config/sofle.keymap",
+    "date": "2026-11-16",
+    "url": "https://github.com/chesneynyffels/mechboards-zmk-config/blob/f33c8122b4c77cba9d39e8ca2bf7946b1bf16be8/config/sofle.keymap",
+    "localFile": "config/sofle.keymap",
+    "status": "Configuratie gebaseerd op de vermelde broncommit, met de bevestigde persoonlijke wijzigingen",
+    "corrections": "Persoonlijke BASE-indeling, LOWER met F1-F12 en navigatie links, RAISE met Bluetooth en navigatie rechts. LOWER en RAISE hebben Delete / Enter op posities 54 / 55. Rechter encoder: volgende/vorige en play/pauze. GAME wordt via LOWER + linksboven geactiveerd; F12 staat op LOWER naast P; RAISE naast P is nog niet afzonderlijk bevestigd."
+  },
+  "layers": [
+    {
+      "id": "BASE",
+      "name": "default_layer",
+      "bindings": [
+        "&kp GRAVE",
+        "&kp N1",
+        "&kp N2",
+        "&kp N3",
+        "&kp N4",
+        "&kp N5",
+        "&kp N6",
+        "&kp N7",
+        "&kp N8",
+        "&kp N9",
+        "&kp N0",
+        "&kp BSPC",
+        "&kp ESC",
+        "&kp Q",
+        "&kp W",
+        "&kp E",
+        "&kp R",
+        "&kp T",
+        "&kp Y",
+        "&kp U",
+        "&kp I",
+        "&kp O",
+        "&kp P",
+        "&kp LBKT",
+        "&kp TAB",
+        "&kp A",
+        "&kp S",
+        "&kp D",
+        "&kp F",
+        "&kp G",
+        "&kp H",
+        "&kp J",
+        "&kp K",
+        "&kp L",
+        "&kp SEMI",
+        "&kp SQT",
+        "&kp LSHFT",
+        "&kp Z",
+        "&kp X",
+        "&kp C",
+        "&kp V",
+        "&kp B",
+        "&kp C_MUTE",
+        "&kp C_PP",
+        "&kp N",
+        "&kp M",
+        "&kp COMMA",
+        "&kp DOT",
+        "&kp FSLH",
+        "&kp EQUAL",
+        "&kp LCTRL",
+        "&kp LALT",
+        "&kp LGUI",
+        "&mo LOWER",
+        "&kp SPACE",
+        "&kp BSPC",
+        "&mo RAISE",
+        "&kp RCTRL",
+        "&kp LALT",
+        "&kp RSHFT"
+      ],
+      "sensorBindings": [
+        "&inc_dec_kp C_VOL_UP C_VOL_DN",
+        "&inc_dec_kp C_NEXT C_PREV"
+      ]
+    },
+    {
+      "id": "LOWER",
+      "name": "lower_layer",
+      "bindings": [
+        "&to GAME",
+        "&kp F1",
+        "&kp F2",
+        "&kp F3",
+        "&kp F4",
+        "&kp F5",
+        "&kp F6",
+        "&kp F7",
+        "&kp F8",
+        "&kp F9",
+        "&kp F10",
+        "&kp F11",
+        "&trans",
+        "&kp HOME",
+        "&kp UP",
+        "&kp END",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&kp F12",
+        "&trans",
+        "&kp LEFT",
+        "&kp DOWN",
+        "&kp RIGHT",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&kp DEL",
+        "&kp RET",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans"
+      ],
+      "sensorBindings": [
+        "&inc_dec_kp C_VOL_UP C_VOL_DN",
+        "&inc_dec_kp C_NEXT C_PREV"
+      ]
+    },
+    {
+      "id": "RAISE",
+      "name": "raise_layer",
+      "bindings": [
+        "&bt BT_CLR",
+        "&bt BT_SEL 0",
+        "&bt BT_SEL 1",
+        "&bt BT_SEL 2",
+        "&bt BT_SEL 3",
+        "&bt BT_SEL 4",
+        "&kp F6",
+        "&kp F7",
+        "&kp F8",
+        "&kp F9",
+        "&kp F10",
+        "&kp F11",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&kp PG_UP",
+        "&kp HOME",
+        "&kp UP",
+        "&kp END",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&kp PG_DN",
+        "&kp LEFT",
+        "&kp DOWN",
+        "&kp RIGHT",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&kp DEL",
+        "&kp RET",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans"
+      ],
+      "sensorBindings": [
+        "&inc_dec_kp C_VOL_UP C_VOL_DN",
+        "&inc_dec_kp C_NEXT C_PREV"
+      ]
+    },
+    {
+      "id": "GAME",
+      "name": "gaming_layer",
+      "bindings": [
+        "&to BASE",
+        "&kp ESC",
+        "&kp N1",
+        "&kp N2",
+        "&kp N3",
+        "&kp N4",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&to BASE",
+        "&none",
+        "&kp TAB",
+        "&kp Q",
+        "&kp W",
+        "&kp E",
+        "&kp R",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&none",
+        "&kp LSHFT",
+        "&kp A",
+        "&kp S",
+        "&kp D",
+        "&kp F",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&none",
+        "&kp LCTRL",
+        "&kp Z",
+        "&kp X",
+        "&kp C",
+        "&kp V",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&trans",
+        "&none",
+        "&kp G",
+        "&kp B",
+        "&kp N5",
+        "&kp SPACE",
+        "&trans",
+        "&none",
+        "&trans",
+        "&trans",
+        "&none"
+      ],
+      "sensorBindings": [
+        "&inc_dec_kp C_VOL_UP C_VOL_DN",
+        "&inc_dec_kp C_NEXT C_PREV"
+      ]
+    }
+  ]
+}
+</script>
+<script>
+'use strict';
+const DATA = JSON.parse(document.getElementById('keymap-data').textContent);
+const BASE = DATA.layers[0].bindings;
+const PHYSICAL=[...BASE];
+const CURRENT = Object.fromEntries(DATA.layers.map(layer => [layer.id,layer.bindings]));
+const LAYER_IDS = ['BASE','LOWER','RAISE','GAME'];
+const ALIASES = {GRAVE:'`',ESC:'Esc',TAB:'Tab',BSPC:'Bksp',SEMI:';',SQT:"'",LSHFT:'Shift',RSHFT:'Shift',LCTRL:'Ctrl',RCTRL:'Ctrl',LALT:'Alt',RALT:'Alt',LGUI:'Win',RGUI:'Win',RET:'Enter',SPACE:'Spatie',COMMA:',',DOT:'.',FSLH:'/',BSLH:'\\',C_MUTE:'Mute',C_PP:'Play / pauze',C_NEXT:'Volgende',C_PREV:'Vorige',EXCL:'!',AT:'@',HASH:'#',DLLR:'$',PRCNT:'%',CARET:'^',AMPS:'&',ASTRK:'*',LPAR:'(',RPAR:')',PIPE:'|',EQUAL:'=',MINUS:'−',PLUS:'+',LBRC:'{',RBRC:'}',LBKT:'[',RBKT:']',COLON:':',INS:'Ins',PSCRN:'PrtSc',K_CMENU:'Menu',PG_UP:'PgUp',PG_DN:'PgDn',UP:'↑',DOWN:'↓',LEFT:'←',RIGHT:'→',CLCK:'Caps',DEL:'Del',K_UNDO:'Undo',K_CUT:'Knip',K_COPY:'Kopie',K_PASTE:'Plak'};
+/* EDIT LAYER NAMES AND ACTIVATION INSTRUCTIONS HERE. */
+const LAYER_INFO = [
+  {id:'BASE',title:'Basis / typen',type:'Standaard',purpose:'QWERTY, cijfers, leestekens en modifiers voor dagelijks gebruik.',enable:'Automatisch actief na het inschakelen. Dit is de basis onder de andere lagen.',short:'Automatisch actief',exit:'Houd de linker LOWER- of rechter RAISE-duimtoets vast om tijdelijk een andere laag te gebruiken.'},
+  {id:'LOWER',title:'Functietoetsen & navigatie',type:'Vasthouden',purpose:'F1–F11 bovenaan en F12 rechts naast P. GAME linksboven; Home, pijltjes en End links. Delete en Enter op de twee binnenste duimtoetsen. De overige posities geven door naar BASE.',enable:'Houd de linker LOWER-duimtoets vast: de toets direct naast je linker Spatie.',short:'Linker LOWER vasthouden',exit:'Laat LOWER los om terug te keren naar BASE.'},
+  {id:'RAISE',title:'Navigatie & Bluetooth',type:'Vasthouden',purpose:'Bluetooth-profielen linksboven, F6–F11 rechtsboven en Home, pijltjes, End en Page Up/Down rechts. Delete en Enter op de twee binnenste duimtoetsen.',enable:'Houd de rechter RAISE-duimtoets vast: de toets direct naast je rechter Backspace.',short:'Rechter RAISE vasthouden',exit:'Laat RAISE los om terug te keren naar BASE.',note:'BT 1 t/m 5 gebruikt intern profielindices 0 t/m 4. De toets naast P op RAISE moet nog bevestigd worden; voorlopig erft die [ uit BASE.'},
+  {id:'GAME',title:'Gaming',type:'Blijvend',purpose:'Een vaste indeling met het linker toetsblok één kolom naar rechts. Beide helften blijven beschikbaar.',enable:'Er is nog geen activeringstoets toegewezen. Selecteer een positie en gebruik Laag toewijzen om later een ingang te kiezen.',short:'Nog te bepalen',exit:'Tik op BASE helemaal linksboven, of op de terugknop helemaal rechtsboven.',note:'De laag blijft actief zonder vasthouden. A en B zijn alternatieven voor dezelfde vierde laag. Variant A staat in de bijgeleverde keymap. Blauw markeert hier WASD. Voor tekstchat keer je terug naar BASE.'}
+];
+let variant='shift', showEffective=true;
+const selections={};
+const DRAFTS={};
+const STORAGE_KEY='sofle-layout-edits-v1';
+
+/* GAME is layer index 3. Variant A is the local keymap; B is an optional preview. */
+function makeGame(which) {
+  const b=[...CURRENT.GAME];
+  if(which==='relaxed') { b[15]='&kp X'; b[27]='&kp W'; b[39]='&kp S'; }
+  return b;
+}
+function allLayers(){
+  const layers=Object.fromEntries(Object.entries({...CURRENT,GAME:makeGame(variant)}).map(([id,bindings])=>[id,[...bindings]]));
+  Object.values(DRAFTS).forEach(edit=>{if(edit.layer!=='GAME'||edit.variant===variant)layers[edit.layer][edit.index]=edit.to;});
+  return layers;
+}
+function label(binding) {
+  if(binding==='&none')return '—'; if(binding==='&trans')return '▽';
+  const [behavior,code,arg]=binding.split(/\s+/);
+  if(behavior==='&kp')return keyLabel(code);
+  if(behavior==='&mo')return code==='LOWER'?'Lower':code==='RAISE'?'Raise':code; if(behavior==='&to'||behavior==='&tog')return code;
+  if(behavior==='&bt')return code==='BT_CLR'?'BT wissen':`BT ${Number(arg)+1}`;
+  return binding;
+}
+function resolved(id,index) {
+  const layers=allLayers();
+  const order=id==='BASE'?['BASE']:[id,'BASE'];
+  for(const name of order){const b=layers[name][index];if(b!=='&trans')return b;}
+  return '&none';
+}
+function category(binding,id) {
+  if(id==='GAME' && ['&kp W','&kp A','&kp S','&kp D'].includes(binding))return 'movement';
+  if(/^&kp [LR](SHFT|CTRL|ALT|GUI)$/.test(binding))return 'modifier';
+  if(/^&(mo|to|tog) /.test(binding))return 'layer';
+  return binding==='&none'?'off':'';
+}
+function key(id,index,physicalLabels) {
+  const raw=allLayers()[id][index], effective=resolved(id,index);
+  const button=document.createElement('button');button.type='button';
+  button.className=`key ${hasEdit(id,index)?'edited ':''}${category(effective,id)}${raw==='&trans'&&showEffective?' inherited':''}${selections[id]===index?' selected':''}`;
+  button.dataset.index=index;button.dataset.layer=id;button.setAttribute('aria-pressed',String(selections[id]===index));
+  const name=document.createElement('span');name.className='name';name.textContent=label(raw==='&trans'&&showEffective?effective:raw);button.append(name);
+  const physical=label(PHYSICAL[index]);
+  if(physicalLabels && raw!==BASE[index]){const p=document.createElement('span');p.className='physical';p.textContent='fys. '+physical;button.append(p);}
+  button.setAttribute('aria-label',`${id}, positie ${index}, fysiek ${physical}: ${raw}${raw==='&trans'?', effectief '+effective:''}`);
+  button.title=`${positionName(index)} · positie ${index} · basis ${physical}\n${raw}${raw==='&trans'?' → '+effective:''}${hasEdit(id,index)?' · gewijzigd':''}`;
+  button.addEventListener('click',()=>{selections[id]=index;updateSelection();document.getElementById('editor-'+id).scrollIntoView({block:'nearest'});document.getElementById('capture-'+id).focus({preventScroll:true});});return button;
+}
+function board(element,id,side,physicalLabels=false) {
+  element.replaceChildren();const matrix=document.createElement('div');matrix.className='matrix';
+  const offsets=side==='left'?[.55,.55,.18,0,.18,.28]:[.28,.18,0,.18,.55,.55];
+  for(let r=0;r<4;r++)for(let c=0;c<6;c++){
+    const index=side==='left'?r*12+c:r===3?44+c:r*12+6+c;
+    const k=key(id,index,physicalLabels);k.style.transform=`translateY(calc(var(--unit) * ${offsets[c]}))`;matrix.append(k);
+  }
+  element.append(matrix);
+  const aux=document.createElement('div');aux.className='aux';
+  const note=document.createElement('span');note.className='small muted';
+  const sensor=DATA.layers.find(layer=>layer.id===id).sensorBindings[side==='left'?0:1].split(/\s+/);
+  note.textContent='↻ '+keyLabel(sensor[1])+' · ↺ '+keyLabel(sensor[2]);
+  if(side==='left')aux.append(note,key(id,42,false));else aux.append(key(id,43,false),note);element.append(aux);
+  const thumbs=document.createElement('div');thumbs.className='thumbs';
+  for(let c=0;c<5;c++){const k=key(id,(side==='left'?50:55)+c,physicalLabels);k.style.gridColumn=String(side==='left'?c+2:c+1);k.style.transform=`translateY(calc(var(--unit) * ${(side==='left'?[0,0,.05,.12,.22]:[.22,.12,.05,0,0])[c]}))`;thumbs.append(k);}
+  element.append(thumbs);resizeBoard(element);
+}
+function resizeBoard(element){const gap=window.innerWidth<=360?4:6;element.style.setProperty('--unit',`${(element.clientWidth-5*gap)/6}px`);}
+function updateSelection(){
+  document.querySelectorAll('.key').forEach(k=>{const yes=selections[k.dataset.layer]===Number(k.dataset.index);k.classList.toggle('selected',yes);k.setAttribute('aria-pressed',String(yes));});
+  LAYER_IDS.forEach(id=>{
+    const line=document.getElementById('inspect-'+id);line.replaceChildren();
+    const index=selections[id];
+    if(index===undefined){line.textContent='Klik op een toets en druk daarna de gewenste toets op je toetsenbord.';document.getElementById('editor-'+id).hidden=true;return;}
+    const raw=allLayers()[id][index],effective=resolved(id,index),code=document.createElement('code');code.textContent=raw;
+    line.append(`${positionName(index)} · basis ${label(PHYSICAL[index])} · positie ${index} · `,code,` · uitvoer: ${label(effective)}${raw==='&trans'?' (geërfd)':''}`);
+    document.getElementById('editor-'+id).hidden=false;
+    document.getElementById('edit-input-'+id).value=editableName(raw);
+    document.getElementById('edit-input-'+id).removeAttribute('aria-invalid');
+    document.getElementById('edit-current-'+id).textContent=`Huidige functie: ${editableName(raw)}${raw==='&trans'?' → '+label(effective):''}`;
+    document.getElementById('capture-'+id).value=editableName(raw);
+    document.getElementById('restore-'+id).disabled=!hasEdit(id,index);
+    document.querySelectorAll('#editor-'+id+' [data-behavior]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.behavior===raw)));
+    const layerBinding=raw.match(/^&(to|mo|tog) (BASE|LOWER|RAISE|GAME)$/);
+    document.getElementById('layer-target-'+id).value=layerBinding?layerBinding[2]:'';
+    document.getElementById('layer-mode-'+id).value=layerBinding?layerBinding[1]:'to';
+    document.getElementById('layer-apply-'+id).disabled=!layerBinding;
+    document.getElementById('edit-error-'+id).textContent='';
+  });
+}
+function gameCode(){
+  const b=allLayers().GAME, rows=[[0,12],[12,24],[24,36],[36,50],[50,60]];
+  return `gaming_layer {\n    display-name = "gaming";\n    bindings = <\n${rows.map(([from,to])=>'        '+b.slice(from,to).join(' ')).join('\n')}\n    >;\n    sensor-bindings = <\n        &inc_dec_kp C_VOL_UP C_VOL_DN\n        ${DATA.layers.find(layer=>layer.id==='GAME').sensorBindings[1]}\n    >;\n};`;
+}
+function render(){
+  LAYER_IDS.forEach(id=>{
+    board(document.getElementById('board-'+id+'-left'),id,'left');
+    board(document.getElementById('board-'+id+'-right'),id,'right');
+  });
+  document.getElementById('game-variant-note').textContent=variant==='relaxed'?'Variant B: vooruit W op fysieke D, achteruit S op C, links A op S en rechts D op F. X verhuist naar fysieke E.':'Variant A: WASD op de fysieke ESDF-posities. De overige linkertoetsen schuiven mee.';
+  document.getElementById('game-code').textContent=gameCode();document.getElementById('copy-status').textContent='';updateSelection();updateReport();
+  const entries=[];
+  Object.entries(allLayers()).filter(([id])=>id!=='GAME').forEach(([id,bindings])=>bindings.forEach((binding,index)=>{const match=binding.match(/^&(to|mo|tog) GAME$/);if(match)entries.push(`${id} · ${positionName(index)} · ${match[1]==='to'?'blijvend':match[1]==='mo'?'zolang vasthouden':'aan/uit'}`);}));
+  document.getElementById('game-enable-description').textContent=entries.length?'Ingesteld via: '+entries.join('; '):LAYER_INFO.find(layer=>layer.id==='GAME').enable;
+  document.getElementById('game-entry-overview').textContent=entries.length?'Toegewezen via '+entries.map(entry=>entry.split(' · ')[0]).join(', '):'Nog te bepalen';
+}
+function buildSections(){
+  const nav=document.getElementById('layer-nav'),rows=document.getElementById('overview-rows'),overview=document.getElementById('layer-overview');
+  LAYER_INFO.forEach((info,i)=>{
+    const anchor=document.createElement('a');anchor.href='#layer-'+info.id;anchor.textContent=`${i+1} · ${info.id}`;nav.append(anchor);
+    const row=document.createElement('tr');
+    [String(i+1),info.id,info.short,info.type].forEach((value,c)=>{const cell=document.createElement('td');if(info.id==='GAME'&&c===2)cell.id='game-entry-overview';if(c===1){const a=document.createElement('a');a.href=anchor.href;a.textContent=value;cell.append(a);}else cell.textContent=value;row.append(cell);});rows.append(row);
+    const section=document.createElement('section');section.id='layer-'+info.id;section.className='layer-section';section.setAttribute('aria-labelledby','heading-'+info.id);
+    const head=document.createElement('div');head.className='section-head';
+    const title=document.createElement('div'),eyebrow=document.createElement('p'),heading=document.createElement('h2');
+    eyebrow.className='eyebrow';eyebrow.textContent=`Laag ${i+1} · ZMK-index ${i} · ${info.type}`;heading.id='heading-'+info.id;heading.textContent=info.id+' · '+info.title;title.append(eyebrow,heading);head.append(title);
+    if(info.id==='GAME'){
+      const labelElement=document.createElement('label');labelElement.className='control';labelElement.textContent='Indeling';const select=document.createElement('select');select.id='variant';
+      [['shift','A · één kolom naar rechts'],['relaxed','B · ook middelvinger lager']].forEach(([value,name])=>{const option=document.createElement('option');option.value=value;option.textContent=name;select.append(option);});
+      select.addEventListener('change',event=>{variant=event.target.value;render();});labelElement.append(select);head.append(labelElement);
+    }
+    section.append(head);
+    const metadata=document.createElement('dl');metadata.className='layer-meta';
+    [['Waarvoor',info.purpose],['Activeren',info.enable],['Terug',info.exit]].forEach(([name,value])=>{const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=name;dd.textContent=value;if(info.id==='GAME'&&name==='Activeren')dd.id='game-enable-description';metadata.append(dt,dd);});section.append(metadata);
+    if(info.note){const p=document.createElement('p');p.className='layer-note';p.textContent=info.note;section.append(p);}
+    if(info.id==='GAME'){const p=document.createElement('p');p.id='game-variant-note';p.className='layer-note';section.append(p);}
+    const split=document.createElement('div');split.className='split';
+    for(const side of ['left','right']){const half=document.createElement('div'),caption=document.createElement('h3'),keyboard=document.createElement('div');caption.className='board-caption';caption.textContent=side==='left'?'Links':'Rechts';keyboard.id='board-'+info.id+'-'+side;keyboard.className='keyboard'+(side==='right'?' right':'');half.append(caption,keyboard);split.append(half);}
+    section.append(split);const inspect=document.createElement('p');inspect.id='inspect-'+info.id;inspect.className='inspector small';inspect.setAttribute('aria-live','polite');section.append(inspect);section.append(createEditor(info.id));overview.append(section);
+  });
+}
+
+/* Browser-only correction editor. Never writes the keymap or sends data. */
+function editKey(id,index,which=variant){return `${id}:${id==='GAME'?which:'shared'}:${index}`;}
+function hasEdit(id,index){return Object.hasOwn(DRAFTS,editKey(id,index));}
+function originalBinding(id,index,which=variant){return id==='GAME'?makeGame(which)[index]:CURRENT[id][index];}
+function positionName(index){
+  if(index<36){const row=Math.floor(index/12)+1,side=index%12<6?'Links':'Rechts';return `${side}, rij ${row}, toets ${index%6+1}`;}
+  if(index<42)return `Links, rij 4, toets ${index-35}`;
+  if(index===42)return 'Links, drukknop draaiknop';if(index===43)return 'Rechts, drukknop draaiknop';
+  if(index<50)return `Rechts, rij 4, toets ${index-43}`;
+  return `${index<55?'Links':'Rechts'}, onderste rij, toets ${index<55?index-49:index-54}`;
+}
+function editableName(binding){
+  if(binding==='&none')return 'Uitgeschakeld';if(binding==='&trans')return 'Doorgeven';
+  if(binding.startsWith('&kp '))return label(binding);
+  return binding;
+}
+function parseKey(value){
+  const trimmed=value.trim(),lower=trimmed.toLowerCase();
+  const literal={'`':'GRAVE','=':'EQUAL','-':'MINUS','−':'MINUS','[':'LBKT',']':'RBKT',';':'SEMI',"'":'SQT',',':'COMMA','.':'DOT','/':'FSLH','\\':'BSLH','!':'EXCL','@':'AT','#':'HASH','$':'DLLR','%':'PRCNT','^':'CARET','&':'AMPS','*':'ASTRK','(':'LPAR',')':'RPAR','|':'PIPE','+':'PLUS','{':'LBRC','}':'RBRC',':':'COLON'};
+  const named={backspace:'BSPC',bksp:'BSPC',enter:'RET',return:'RET',space:'SPACE',spatie:'SPACE',tab:'TAB',esc:'ESC',escape:'ESC',shift:'LSHFT',ctrl:'LCTRL',control:'LCTRL',alt:'LALT',win:'LGUI',windows:'LGUI',gui:'LGUI',left:'LEFT',links:'LEFT','←':'LEFT',right:'RIGHT',rechts:'RIGHT','→':'RIGHT',up:'UP',omhoog:'UP','↑':'UP',down:'DOWN',omlaag:'DOWN','↓':'DOWN',delete:'DEL',del:'DEL',insert:'INS',ins:'INS',pageup:'PG_UP',pgup:'PG_UP',pagedown:'PG_DN',pgdn:'PG_DN',capslock:'CLCK',caps:'CLCK',mute:'C_MUTE',prtsc:'PSCRN',printscreen:'PSCRN',menu:'K_CMENU',undo:'K_UNDO',knip:'K_CUT',kopie:'K_COPY',plak:'K_PASTE'};
+  if(!trimmed)throw Error('Vul een toets in, bijvoorbeeld =, [, Backspace of Spatie.');
+  if(['uit','geen','none','uitgeschakeld','—'].includes(lower))return '&none';
+  if(['trans','transparant','erven','doorgeven','passthrough','pass-through','▽'].includes(lower))return '&trans';
+  if(Object.hasOwn(literal,trimmed))return '&kp '+literal[trimmed];
+  if(Object.hasOwn(named,lower.replace(/\s+/g,'')))return '&kp '+named[lower.replace(/\s+/g,'')];
+  if(/^[a-z]$/i.test(trimmed))return '&kp '+trimmed.toUpperCase();
+  if(/^\d$/.test(trimmed))return '&kp N'+trimmed;
+  if(/^f(?:[1-9]|1\d|2[0-4])$/i.test(trimmed))return '&kp '+trimmed.toUpperCase();
+  if(['base','game'].includes(lower))return '&to '+lower.toUpperCase();
+  if(['lower','raise'].includes(lower))return '&mo '+lower.toUpperCase();
+  const normalized=trimmed.replace(/\s+/g,' ');
+  if(['&none','&trans'].includes(normalized))return normalized;
+  const kp=normalized.match(/^&kp ([A-Z0-9_()]+)$/i);
+  if(kp&&validKeyCode(kp[1].toUpperCase()))return '&kp '+kp[1].toUpperCase();
+  const layer=normalized.match(/^&(mo|to|tog) (BASE|LOWER|RAISE|GAME)$/i);if(layer)return '&'+layer[1].toLowerCase()+' '+layer[2].toUpperCase();
+  const bt=normalized.match(/^&bt (BT_CLR|BT_SEL [0-4])$/i);if(bt)return '&bt '+bt[1].toUpperCase();
+  throw Error('Onbekende toets. Gebruik één letter, cijfer, symbool, toetsnaam of een bekende ZMK-binding zoals &kp EQUAL.');
+}
+function validKeyCode(code,depth=0){
+  if(depth>8)return false;
+  if(Object.hasOwn(ALIASES,code)||['HOME','END','C_VOL_UP','C_VOL_DN'].includes(code)||/^[A-Z]$|^N[0-9]$|^F(?:[1-9]|1\d|2[0-4])$/.test(code))return true;
+  const wrapper=code.match(/^(LS|LC|LA|LG|RS|RC|RA|RG)\((.+)\)$/);
+  return Boolean(wrapper&&validKeyCode(wrapper[2],depth+1));
+}
+function keyLabel(code){
+  const wrapper=code.match(/^(LS|LC|LA|LG|RS|RC|RA|RG)\((.+)\)$/);
+  if(wrapper)return ({LS:'Shift',LC:'Ctrl',LA:'Alt',LG:'Win',RS:'RShift',RC:'RCtrl',RA:'RAlt',RG:'RWin'}[wrapper[1]])+' + '+keyLabel(wrapper[2]);
+  return ({HOME:'Home',END:'End',C_VOL_UP:'Volume +',C_VOL_DN:'Volume −'}[code])||ALIASES[code]||(/^N\d$/.test(code)?code.slice(1):code);
+}
+function modifierCode(event){
+  const right=event.code.endsWith('Right')||event.location===2;
+  return ({Shift:right?'RSHFT':'LSHFT',Control:right?'RCTRL':'LCTRL',Alt:right?'RALT':'LALT',Meta:right?'RGUI':'LGUI',OS:right?'RGUI':'LGUI'}[event.key])||null;
+}
+function bindingFromEvent(event,held=new Set()){
+  const modifier=modifierCode(event);if(modifier)return '&kp '+modifier;
+  if(event.isComposing||['Dead','Process','Unidentified'].includes(event.key))throw Error('Deze toets geeft geen rechtstreeks herkenbare toets door. Probeer opnieuw of gebruik handmatige invoer.');
+  const names={ArrowLeft:'Left',ArrowRight:'Right',ArrowUp:'Up',ArrowDown:'Down',' ':'Spatie',Home:'&kp HOME',End:'&kp END',AudioVolumeUp:'&kp C_VOL_UP',AudioVolumeDown:'&kp C_VOL_DN',AudioVolumeMute:'Mute',MediaPlayPause:'&kp C_PP',MediaTrackNext:'&kp C_NEXT',MediaTrackPrevious:'&kp C_PREV'};
+  const binding=parseKey(names[event.key]||event.key);let code=binding.slice(4);
+  const printable=event.key.length===1,altGraph=event.getModifierState?.('AltGraph')&&printable;
+  const modifiers=[];
+  if(event.ctrlKey&&!altGraph)modifiers.push(held.has('ControlRight')?'RC':'LC');
+  if(event.altKey&&!altGraph)modifiers.push(held.has('AltRight')?'RA':'LA');
+  if(event.metaKey)modifiers.push(held.has('MetaRight')?'RG':'LG');
+  // Symbol aliases (e.g. PLUS) already contain the necessary Shift modifier.
+  if(event.shiftKey&&(!printable||/^[a-z]$/i.test(event.key)))modifiers.push(held.has('ShiftRight')?'RS':'LS');
+  for(const mod of modifiers.reverse())code=mod+'('+code+')';
+  return '&kp '+code;
+}
+function applyBinding(id,index,to){
+  const from=originalBinding(id,index),k=editKey(id,index);
+  if(to===from)delete DRAFTS[k];else DRAFTS[k]={layer:id,index,variant:id==='GAME'?variant:null,from,to};
+  saveDrafts();render();
+}
+function createEditor(id){
+  const form=document.createElement('form');form.className='key-editor';form.id='editor-'+id;form.hidden=true;
+  const captureLabel=document.createElement('label');captureLabel.htmlFor='capture-'+id;captureLabel.textContent='Druk de gewenste toets';
+  const capture=document.createElement('input');capture.type='text';capture.readOnly=true;capture.id='capture-'+id;capture.className='capture-field';capture.placeholder='Klik hier en druk een toets';capture.setAttribute('aria-label','Toets opnemen voor de geselecteerde positie');
+  const cancel=document.createElement('button');cancel.type='button';cancel.className='action';cancel.textContent='Stop opname';
+  const captureRow=document.createElement('div');captureRow.className='editor-controls';captureRow.append(capture,cancel);
+  const captureStatus=document.createElement('p');captureStatus.id='capture-status-'+id;captureStatus.className='capture-status small muted';captureStatus.setAttribute('role','status');capture.setAttribute('aria-describedby',captureStatus.id);
+  const current=document.createElement('p');current.id='edit-current-'+id;current.className='small muted';
+  const systemKeys=document.createElement('fieldset');systemKeys.className='system-keys';
+  const systemLegend=document.createElement('legend');systemLegend.textContent='Systeemtoets kiezen';
+  const systemHint=document.createElement('p');systemHint.className='small muted';systemHint.textContent='Opent de Windows-toets het Startmenu? Kies hem hieronder met de muis.';
+  const systemButtons=document.createElement('div');systemButtons.className='system-key-buttons';
+  [['Windows links','LGUI'],['Windows rechts','RGUI'],['Shift links','LSHFT'],['Shift rechts','RSHFT'],['Ctrl links','LCTRL'],['Ctrl rechts','RCTRL'],['Alt links','LALT'],['Alt rechts / AltGr','RALT']].forEach(([name,keycode])=>{
+    const button=document.createElement('button');button.type='button';button.className='action';button.textContent=name;button.dataset.keycode=keycode;
+    button.addEventListener('click',()=>{const index=selections[id];if(index===undefined)return;stop();applyBinding(id,index,'&kp '+keycode);captureStatus.textContent='Ingesteld: '+name+'. De wijziging staat in je lijst.';});systemButtons.append(button);
+  });
+  systemKeys.append(systemLegend,systemHint,systemButtons);
+  const behaviorKeys=document.createElement('fieldset');behaviorKeys.className='system-keys';
+  const behaviorLegend=document.createElement('legend');behaviorLegend.textContent='Gedrag op deze laag';
+  const behaviorHint=document.createElement('p');behaviorHint.className='small muted';behaviorHint.textContent='Doorgeven gebruikt de functie op een lagere actieve laag. Uitschakelen blokkeert deze toets volledig.';
+  const behaviorButtons=document.createElement('div');behaviorButtons.className='behavior-buttons';
+  [['Doorgeven aan laag eronder','&trans'],['Uitschakelen','&none']].forEach(([name,binding])=>{
+    const button=document.createElement('button');button.type='button';button.className='action';button.textContent=name;button.dataset.behavior=binding;button.setAttribute('aria-pressed','false');
+    button.addEventListener('click',()=>{const index=selections[id];if(index===undefined)return;stop();applyBinding(id,index,binding);captureStatus.textContent=binding==='&none'?'Uitgeschakeld: deze toets doet niets op deze laag.':id==='BASE'?'Doorgeven ingesteld. Onder BASE is geen laag beschikbaar, dus deze toets doet niets.':'Doorgeven ingesteld. Huidige functie uit de laag eronder: '+label(resolved(id,index))+'.';});behaviorButtons.append(button);
+  });
+  behaviorKeys.append(behaviorLegend,behaviorHint,behaviorButtons);
+  const layerKeys=document.createElement('fieldset');layerKeys.className='system-keys';
+  const layerLegend=document.createElement('legend');layerLegend.textContent='Laag toewijzen';
+  const layerHint=document.createElement('p');layerHint.className='small muted';layerHint.textContent='Kies welke laag deze toets activeert en hoe je wilt schakelen.';
+  const layerControls=document.createElement('div');layerControls.className='layer-mode-grid';
+  const targetLabel=document.createElement('label');targetLabel.className='control';targetLabel.textContent='Laag';
+  const target=document.createElement('select');target.id='layer-target-'+id;
+  const empty=document.createElement('option');empty.value='';empty.textContent='Kies een laag…';empty.disabled=true;target.append(empty);
+  LAYER_INFO.forEach((layer,index)=>{const option=document.createElement('option');option.value=layer.id;option.textContent=`${layer.id} · ${layer.title} (${index})`;target.append(option);});target.value='';targetLabel.append(target);
+  const modeLabel=document.createElement('label');modeLabel.className='control';modeLabel.textContent='Schakelen';
+  const mode=document.createElement('select');mode.id='layer-mode-'+id;
+  [['to','Blijvend naar deze laag'],['mo','Alleen tijdens vasthouden'],['tog','Aan/uit schakelen']].forEach(([value,name])=>{const option=document.createElement('option');option.value=value;option.textContent=name;mode.append(option);});modeLabel.append(mode);layerControls.append(targetLabel,modeLabel);
+  const assignLayer=document.createElement('button');assignLayer.type='button';assignLayer.className='action';assignLayer.id='layer-apply-'+id;assignLayer.textContent='Laag toewijzen';assignLayer.disabled=true;
+  target.addEventListener('change',()=>{assignLayer.disabled=!target.value;});
+  assignLayer.addEventListener('click',()=>{const index=selections[id];if(index===undefined||!target.value)return;const to='&'+mode.value+' '+target.value;stop();applyBinding(id,index,to);captureStatus.textContent='Laag ingesteld: '+target.value+' · '+mode.options[mode.selectedIndex].text+'.';});
+  layerKeys.append(layerLegend,layerHint,layerControls,assignLayer);
+  const manual=document.createElement('details');manual.className='manual-entry';const summary=document.createElement('summary');summary.textContent='Handmatig of ZMK-binding ingeven';
+  const labelElement=document.createElement('label');labelElement.htmlFor='edit-input-'+id;labelElement.textContent='Gewenste functie';
+  const input=document.createElement('input');input.type='text';input.id='edit-input-'+id;input.autocomplete='off';input.spellcheck=false;input.placeholder='Bijv. =, [, Backspace, Shift';
+  const apply=document.createElement('button');apply.type='submit';apply.className='action';apply.textContent='Toepassen';
+  const hint=document.createElement('p');hint.className='small muted';hint.textContent='Ook mogelijk: Transparant, Uitgeschakeld of een exacte binding zoals &kp EQUAL.';
+  const error=document.createElement('p');error.id='edit-error-'+id;error.className='edit-error small';error.setAttribute('role','alert');input.setAttribute('aria-describedby',hint.id='edit-hint-'+id);
+  const controls=document.createElement('div');controls.className='editor-controls';controls.append(input,apply);manual.append(summary,labelElement,controls,hint);
+  const restore=document.createElement('button');restore.type='button';restore.id='restore-'+id;restore.className='action';restore.textContent='Herstel origineel';
+  const restoreRow=document.createElement('div');restoreRow.className='code-toolbar';restoreRow.append(restore);
+  form.append(captureLabel,captureRow,captureStatus,current,behaviorKeys,layerKeys,systemKeys,manual,restoreRow,error);
+  let armed=false,pending=null,finishedCode=null;const held=new Set();
+  function arm(){armed=true;pending=null;finishedCode=null;held.clear();capture.value='Druk een toets…';cancel.disabled=false;captureStatus.textContent='Opname actief · de volgende toets wordt automatisch toegepast.';}
+  function stop(){armed=false;pending=null;finishedCode=null;held.clear();cancel.disabled=true;capture.value=editableName(allLayers()[id][selections[id]]);}
+  function record(event,released=false){
+    try{
+      const to=bindingFromEvent(event,held),index=selections[id];stop();applyBinding(id,index,to);
+      captureStatus.textContent='Geregistreerd: '+label(to)+'. Klik op een andere positie om verder te gaan.';
+      if(released)capture.blur();else finishedCode=event.code;
+    }catch(problem){error.textContent=problem.message;captureStatus.textContent='Opname actief · probeer een andere toets.';}
+  }
+  capture.addEventListener('focus',arm);
+  capture.addEventListener('click',()=>{if(!armed)arm();});
+  capture.addEventListener('blur',()=>{if(armed){stop();captureStatus.textContent='Opname gestopt.';}});
+  cancel.addEventListener('click',()=>{stop();captureStatus.textContent='Opname gestopt.';cancel.focus();});
+  capture.addEventListener('keydown',event=>{
+    if(finishedCode!==null){event.preventDefault();event.stopPropagation();return;}
+    if(!armed)return;event.preventDefault();event.stopPropagation();if(event.repeat)return;
+    if(modifierCode(event)){held.add(event.code);pending={key:event.key,code:event.code,location:event.location};capture.value=keyLabel(modifierCode(event))+'…';return;}
+    pending=null;record(event);
+  });
+  capture.addEventListener('keyup',event=>{
+    if(finishedCode!==null){event.preventDefault();event.stopPropagation();if(event.code===finishedCode){finishedCode=null;capture.blur();}return;}
+    if(!armed)return;event.preventDefault();event.stopPropagation();held.delete(event.code);
+    if(pending&&pending.code===event.code){const saved=pending;pending=null;record(saved,true);}
+  });
+  form.addEventListener('submit',event=>{
+    event.preventDefault();try{
+      const index=selections[id];if(index===undefined)return;
+      const currentBinding=allLayers()[id][index],to=input.value.trim()===editableName(currentBinding)?currentBinding:parseKey(input.value);
+      applyBinding(id,index,to);input.focus();
+    }catch(problem){error.textContent=problem.message;input.setAttribute('aria-invalid','true');}
+  });
+  input.addEventListener('input',()=>{input.removeAttribute('aria-invalid');error.textContent='';});
+  restore.addEventListener('click',()=>{delete DRAFTS[editKey(id,selections[id])];saveDrafts();render();});
+  cancel.disabled=true;return form;
+}
+function saveDrafts(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,changes:Object.values(DRAFTS)}));document.getElementById('storage-status').textContent='';}
+  catch{document.getElementById('storage-status').textContent='Bewaren in deze browser lukt niet. Kopieer je wijzigingen voordat je de pagina sluit.';}
+}
+function restoreDrafts(){
+  let skipped=0,integrated=0;
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+    if(saved?.version===1&&Array.isArray(saved.changes))for(const edit of saved.changes){
+      if(!edit||!LAYER_IDS.includes(edit.layer)||!Number.isInteger(edit.index)||edit.index<0||edit.index>=60||(edit.layer==='GAME'&&!['shift','relaxed'].includes(edit.variant))){skipped++;continue;}
+      try{const original=originalBinding(edit.layer,edit.index,edit.variant);if(parseKey(edit.to)!==edit.to){skipped++;continue;}if(edit.to===original){integrated++;continue;}if(edit.from!==original){skipped++;continue;}DRAFTS[editKey(edit.layer,edit.index,edit.variant)]={layer:edit.layer,index:edit.index,variant:edit.layer==='GAME'?edit.variant:null,from:edit.from,to:edit.to};}catch{skipped++;}
+    }
+  }catch{/* Storage may be disabled for a local file. Editing still works. */}
+  if(integrated||skipped){
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,changes:Object.values(DRAFTS)}));}catch{}
+    document.getElementById('storage-status').textContent=[integrated?`${integrated} wijziging(en) zijn al overgenomen in de lokale keymap.`:'',skipped?`${skipped} oudere wijziging(en) passen niet meer bij de huidige basisgegevens.`:''].filter(Boolean).join(' ');
+  }
+}
+function sortedEdits(){return Object.values(DRAFTS).sort((a,b)=>LAYER_IDS.indexOf(a.layer)-LAYER_IDS.indexOf(b.layer)||String(a.variant).localeCompare(String(b.variant))||a.index-b.index);}
+function updateReport(){
+  const edits=sortedEdits(),report=document.getElementById('changes-report');
+  document.getElementById('changes-count').textContent=edits.length+' wijziging'+(edits.length===1?'':'en');
+  document.getElementById('copy-changes').disabled=!edits.length;
+  document.getElementById('changes-copy-status').textContent='';
+  report.value=edits.length?[
+    'Sofle-layoutcorrecties',
+    'Bestand: config/sofle.keymap',
+    'Posities zijn 0-gebaseerd, zoals in de infopagina.',
+    '',
+    ...edits.map(edit=>`${edit.layer}${edit.layer==='GAME'?' (variant '+(edit.variant==='shift'?'A':'B')+')':''} — ${positionName(edit.index)} (positie ${edit.index}, basis ${label(PHYSICAL[edit.index])}): ${edit.from==='&trans'?'Doorgeven':edit.from==='&none'?'Uitgeschakeld':label(edit.from)} [${edit.from}] → ${edit.to==='&trans'?'Doorgeven aan laag eronder':edit.to==='&none'?'Uitgeschakeld':label(edit.to)} [${edit.to}]`)
+  ].join('\n'):'Nog geen wijzigingen. Klik op een toets en pas de gewenste functie toe.';
+  if(edits.length)document.getElementById('changes-details').open=true;
+}
+async function copyChanges(){
+  const report=document.getElementById('changes-report'),status=document.getElementById('changes-copy-status');
+  try{await navigator.clipboard.writeText(report.value);status.textContent='Gekopieerd. Je kunt de lijst in de chat plakken.';}
+  catch{report.focus();report.select();status.textContent='Tekst geselecteerd. Kopieer met Ctrl+C of Cmd+C.';}
+}
+
+restoreDrafts();
+buildSections();
+const source=document.getElementById('source'),link=document.createElement('a');link.href=DATA.source.url;link.textContent=`${DATA.source.branch} / ${DATA.source.file} · ${DATA.source.commit.slice(0,8)}`;
+source.append('Gebaseerd op: ',link,` · bijgewerkt ${DATA.source.date}`);
+document.getElementById('copy-changes').addEventListener('click',copyChanges);
+document.getElementById('transparency').addEventListener('change',event=>{showEffective=event.target.value==='effective';render();});
+document.getElementById('copy-code').addEventListener('click',async()=>{const status=document.getElementById('copy-status');try{await navigator.clipboard.writeText(gameCode());status.textContent='Gekopieerd.';}catch{const selection=window.getSelection(),range=document.createRange();range.selectNodeContents(document.getElementById('game-code'));selection.removeAllRanges();selection.addRange(range);status.textContent='Code geselecteerd. Kopieer met Ctrl+C of Cmd+C.';}});
+DATA.layers.forEach(layer=>{if(layer.bindings.length!==60)throw new Error(`Laag ${layer.id} moet 60 bindings bevatten.`);});
+render();const observer=new ResizeObserver(entries=>entries.forEach(entry=>resizeBoard(entry.target)));document.querySelectorAll('.keyboard').forEach(element=>observer.observe(element));
+</script>
+</body>
+</html>
