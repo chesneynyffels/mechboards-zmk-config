@@ -23,6 +23,17 @@
 
 / {
 
+    // Global physical combo: works on BASE, LOWER, RAISE and GAME.
+    combos {
+        compatible = "zmk,combos";
+        combo_gaming_toggle {
+            timeout-ms = <200>;
+            key-positions = <53 56>;
+            bindings = <&tog GAME>;
+            slow-release;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -52,12 +63,12 @@
             display-name = "lower";
             // Transparent positions inherit from BASE.
             // Left / right halves; encoder clicks are between the bottom rows.
-            // | GAME| F1   | F2   | F3    | F4 | F5 |   | F6 | F7 | F8 | F9 | F10 | F11 |
+            // | BASE| F1   | F2   | F3    | F4 | F5 |   | F6 | F7 | F8 | F9 | F10 | F11 |
             // |  v  | HOME | UP   | END   | v  | v  |   | v  | v  | v  | v  | v   | F12 |
             // |  v  | LEFT | DOWN | RIGHT | v  | v  |   | v  | v  | v  | v  | v   | v   |
-            // Thumb positions 54 / 55 are Delete / Enter; other remaining positions are transparent.
+            // Thumb positions 54 / 55 are Delete / Enter. LOWER + RAISE is a global GAME toggle; remaining positions are transparent.
             bindings = <
-                &to GAME    &kp F1    &kp F2    &kp F3      &kp F4    &kp F5                    &kp F6    &kp F7   &kp F8    &kp F9    &kp F10   &kp F11
+                &to BASE    &kp F1    &kp F2    &kp F3      &kp F4    &kp F5                    &kp F6    &kp F7   &kp F8    &kp F9    &kp F10   &kp F11
                 &trans &kp HOME    &kp UP    &kp END      &trans    &trans                    &trans    &trans   &trans    &trans    &trans    &kp F12
                 &trans    &kp LEFT  &kp DOWN    &kp RIGHT    &trans  &trans                 &trans &trans &trans &trans  &trans  &trans
                 &trans    &trans &trans &trans &trans  &trans   &trans &trans  &trans  &trans &trans  &trans &trans  &trans
@@ -75,7 +86,7 @@
             // | BTCLR | BT1 | BT2 | BT3 | BT4 | BT5 |   | F6   | F7   | F8   | F9    | F10 | F11 |
             // | v     | v   | v   | v   | v   | v   |   | PGUP | HOME | UP   | END   | v   | v   |
             // | v     | v   | v   | v   | v   | v   |   | PGDN | LEFT | DOWN | RIGHT | v   | v   |
-            // Thumb positions 54 / 55 are Delete / Enter; other remaining positions are transparent.
+            // Thumb positions 54 / 55 are Delete / Enter. LOWER + RAISE is a global GAME toggle; remaining positions are transparent.
             bindings = <
                 &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4                  &kp F6    &kp F7    &kp F8   &kp F9    &kp F10  &kp F11
                 &trans     &trans      &trans    &trans  &trans       &trans                        &kp PG_UP &kp HOME    &kp UP   &kp END    &trans  &trans
@@ -92,13 +103,15 @@
 
         gaming_layer {
             display-name = "gaming";
-            // LOWER + top-left enters GAME. Top-left or top-right returns to BASE.
+            // Press LOWER + RAISE together to toggle GAME on/off; release both before repeating.
+            // LOWER + top-left returns to BASE; either top corner also returns directly.
+            // Position 53 remains LOWER instead of the previous gaming number 5.
             bindings = <
                 &to BASE &kp ESC &kp N1 &kp N2 &kp N3 &kp N4 &trans &trans &trans &trans &trans &to BASE
                 &none &kp TAB &kp Q &kp W &kp E &kp R &trans &trans &trans &trans &trans &trans
                 &none &kp LSHFT &kp A &kp S &kp D &kp F &trans &trans &trans &trans &trans &trans
                 &none &kp LCTRL &kp Z &kp X &kp C &kp V &trans &trans &trans &trans &trans &trans &trans &trans
-                &none &kp G &kp B &kp N5 &kp SPACE &trans &none &trans &trans &none
+                &none &kp G &kp B &mo LOWER &kp SPACE &trans &none &trans &trans &none
             >;
             sensor-bindings = <
                 &inc_dec_kp C_VOL_UP C_VOL_DN
