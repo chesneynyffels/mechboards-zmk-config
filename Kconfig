@@ -1,17 +1,38 @@
 # SPDX-License-Identifier: MIT
 
 menuconfig NYFFELS_DISPLAY_ART
-    bool "Nyffels right-hand display artwork"
+    bool "Nyffels Sofle display customization"
     depends on SHIELD_NICE_VIEW_GEM && ZMK_DISPLAY && ZMK_SPLIT_BLE
     help
-      Keep the existing GEM status screen and replace only the right-hand
-      decorative artwork. Synchronize GAME state over the existing split link.
+      Customize the right-hand artwork and optionally use the useful left
+      status screen. Synchronize GAME state over the existing split link.
 
 if NYFFELS_DISPLAY_ART
+
+config NYFFELS_LEFT_STATUS
+    bool "Useful left-hand status screen without WPM"
+    depends on ZMK_SPLIT_ROLE_CENTRAL
+    select LV_USE_CANVAS
+    select LV_FONT_UNSCII_8
+    select LV_FONT_MONTSERRAT_16
+    help
+      Show the active layer, battery and endpoint on the left display.
+      Disable NICE_VIEW_WIDGET_STATUS and ZMK_WPM for this central build
+      so GEM does not pull in its WPM calculation or display listener.
 
 config NYFFELS_DISPLAY_GAME_LAYER
     int "GAME layer index"
     range 0 31
     default 3
+
+if NYFFELS_LEFT_STATUS
+
+# GEM only adds selects to this symbol; its original nice!view prompt is
+# conditional on a different shield. Expose it for this left-screen variant
+# so an explicit n can override the custom-screen imply and remove WPM.
+config NICE_VIEW_WIDGET_STATUS
+    bool "Use legacy GEM status widgets"
+
+endif
 
 endif

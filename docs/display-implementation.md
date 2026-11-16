@@ -4,10 +4,46 @@ The Sofle uses ZMK v0.3 and the `nice_view_gem` shield. `CONFIG_NYFFELS_DISPLAY_
 enables this repository's Zephyr module for Sofle only. Corne and Lily58 keep their
 existing configurations.
 
-The left display is unchanged. The right display keeps GEM's battery and split
+The right display keeps GEM's battery and split
 connection widgets, replacing only its decorative image: Nyffels in normal
 layers, a controller whenever GAME is active. The supplied logo is preserved as
 `assets/display/nyffels-logo.png`.
+
+## Left status without WPM
+
+The Sofle central build now uses `src/display_status_left.c` instead of GEM's
+WPM screen. It shows battery percentage, USB/Bluetooth profile, the current
+layer in a large label, connection status and the selected Bluetooth profile. GAME
+uses an inverted black panel to stand out.
+
+The top header shows the current transport (`USB` or `BT`), while the footer
+always shows the selected Bluetooth slot, for example `BT 1/5`, including when
+USB is in use. The total comes from ZMK's `ZMK_BLE_PROFILE_COUNT`; slot selection
+is one-based on screen. Layer changes do not hide or reset the profile indicator.
+
+The three central-only CMake options in `build.yaml` are required:
+
+```
+-DCONFIG_NYFFELS_LEFT_STATUS=y
+-DCONFIG_NICE_VIEW_WIDGET_STATUS=n
+-DCONFIG_ZMK_WPM=n
+```
+
+GEM normally implies `NICE_VIEW_WIDGET_STATUS`, which selects `ZMK_WPM`.
+Our Kconfig exposes a prompt for the otherwise hidden GEM symbol only when
+the custom left screen is enabled. This lets the explicit `n` take effect.
+The resulting central firmware must contain neither `wpm_timer` nor
+`wpm_work_handler`. The peripheral retains its normal GEM widgets.
+
+The left screen listens to layer, battery, endpoint, Bluetooth-profile and USB
+events on ZMK's display work queue. It skips redraws if the visible state is
+unchanged. There is no WPM calculation, keystroke counter or WPM refresh timer.
+Normal display maintenance and BLE processing remain necessary. No battery-life
+improvement is quantified without measurement on the actual keyboard.
+
+The 68×160 portrait canvas is rendered clockwise into the panel's native 160×68
+buffer. Both buffers are static; rendering does not allocate a new full image
+for each update. `docs/sofle-left-display.html` is a schematic preview.
 
 ## Artwork
 
@@ -40,8 +76,9 @@ resynchronized. LVGL updates run exclusively on ZMK's display work queue.
 ## GEM integration
 
 On the peripheral build only, `--wrap=draw_animation` redirects GEM's decoration
-creation to `__wrap_draw_animation()`. This keeps upstream status widgets and the
-entire central display intact, without copying or editing the external module.
+creation to `__wrap_draw_animation()`. This keeps the peripheral's upstream
+status widgets intact, without copying or editing the external module. The
+central build disables GEM widgets and supplies its own status-screen entry point.
 This integration is based on Mechboards GEM revision
 `7794ebf` (branch `nv_gem`); if its decoration entry point changes, update the
 wrapper accordingly. Link-map verification should show the wrapper and exclude
