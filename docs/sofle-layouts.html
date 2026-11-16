@@ -103,6 +103,7 @@
     <p class="intro">Per laag: waarvoor ze dient, hoe je ze activeert en de volledige indeling van beide helften. Klik op een toets in de layout en druk de gewenste toets op je toetsenbord. De wijziging wordt meteen geregistreerd; kopieer daarna de lijst om ze in de chat door te geven.</p>
     <p class="source">Configuratie: BASE, LOWER, RAISE en GAME. De oude instellingenlaag is verwijderd. De nummering hieronder start bij 1; ZMK telt vanaf index 0.</p>
     <nav class="nav" id="layer-nav" aria-label="Ga naar een laag"></nav>
+    <p class="small"><a href="sofle-display.html">Rechterscherm: logo en GAME →</a></p>
     <div class="table-wrap"><table><thead><tr><th>Laag</th><th>Naam</th><th>Activeren</th><th>Type</th></tr></thead><tbody id="overview-rows"></tbody></table></div>
     <div class="section-head overview-controls">
       <div class="legend"><span><i class="swatch mod" aria-hidden="true"></i>Modifiers</span><span><i class="swatch layer" aria-hidden="true"></i>Laagtoetsen</span><span>— uitgeschakeld</span><span>↳ geërfd uit een lagere laag</span></div>
@@ -133,7 +134,7 @@
       <ol><li>De vier lagen staan in <code>&lt;script id="keymap-data" type="application/json"&gt;</code>, met 60 bindings per laag in dezelfde volgorde als de .keymap. Globale toetscombinaties staan apart in <code>combos</code>; de firmware definieert die buiten <code>keymap</code>.</li><li>De namen en activeringsinstructies staan in <code>LAYER_INFO</code>. <code>makeGame()</code> gebruikt de GAME-bindings uit dezelfde gegevens; variant B wijzigt alleen drie posities.</li><li>Werk bij een firmwarewijziging ook de gegevens en de broncommit bij. Deze pagina leest GitHub niet automatisch uit en schrijft niets terug.</li></ol>
     </details>
     <details><summary>De keymap gebruiken</summary>
-      <ol><li>Vervang <code>config/sofle.keymap</code> in je eigen repository door de <a href="../config/sofle.keymap">bijgeleverde keymap</a>. De persoonlijke toetsen naast P en / zijn bijgewerkt. LOWER biedt functietoetsen en navigatie links; LOWER + RAISE schakelt GAME aan/uit; LOWER linksboven keert terug naar BASE; F12 staat op LOWER rechts naast P.</li><li>ADJUST is verwijderd. LOWER + RAISE schakelt GAME (index 3) aan/uit via een globale combo. Druk beide toetsen samen in en laat beide los voordat je de combo herhaalt. LOWER + linksboven schakelt naar BASE. Bluetooth-instellingen blijven beschikbaar op RAISE.</li><li>Bouw en flash via je bestaande werkwijze. Voor Sofle staat ZMK Studio uit: de firmware gebruikt deze keymap rechtstreeks en negeert opgeslagen Studio-bindings. Bluetooth-koppelingen worden niet gewist. Laat de laagtoetsen na het schakelen los.</li></ol>
+      <ol><li>Gebruik de volledige configuratie uit de repository, inclusief de schermmodule. De toetsen staan in de <a href="../config/sofle.keymap">bijgeleverde keymap</a>. De persoonlijke toetsen naast P en / zijn bijgewerkt. LOWER biedt functietoetsen en navigatie links; LOWER + RAISE schakelt GAME aan/uit; F12 staat op LOWER linksboven; rechts naast P staat ].</li><li>ADJUST is verwijderd. LOWER + RAISE schakelt GAME (index 3) aan/uit via een globale combo. Druk beide toetsen samen in en laat beide los voordat je de combo herhaalt. De twee bovenste hoektoetsen in GAME schakelen naar BASE. Bluetooth-instellingen blijven beschikbaar op RAISE.</li><li>Bouw en flash via je bestaande werkwijze. Voor Sofle staat ZMK Studio uit: de firmware gebruikt deze keymap rechtstreeks en negeert opgeslagen Studio-bindings. Bluetooth-koppelingen worden niet gewist. Laat de laagtoetsen na het schakelen los.</li></ol>
       <p class="small muted">Dit is de gedocumenteerde configuratie. Het wisselen van variant op deze pagina past het .keymap-bestand niet aan. A staat in het bijgeleverde bestand; voor B kun je het onderstaande gaming_layer-blok overnemen.</p>
       <div class="code-toolbar"><button type="button" class="action" id="copy-code">Kopieer gaming_layer</button><span class="small muted" id="copy-status" role="status"></span></div><pre><code id="game-code"></code></pre>
     </details>
@@ -176,7 +177,7 @@
     "url": "https://github.com/chesneynyffels/mechboards-zmk-config/blob/f33c8122b4c77cba9d39e8ca2bf7946b1bf16be8/config/sofle.keymap",
     "localFile": "config/sofle.keymap",
     "status": "Configuratie gebaseerd op de vermelde broncommit, met de bevestigde persoonlijke wijzigingen",
-    "corrections": "Persoonlijke BASE-indeling, LOWER met F1-F12 en navigatie links, RAISE met Bluetooth en navigatie rechts. LOWER en RAISE hebben Delete / Enter op posities 54 / 55. Rechter encoder: volgende/vorige en play/pauze. LOWER + RAISE schakelt GAME aan/uit via een globale combo (posities 53 + 56, binnen 200 ms); LOWER + linksboven keert terug naar BASE; Studio is uitgeschakeld voor Sofle; F12 staat op LOWER naast P; RAISE naast P is nog niet afzonderlijk bevestigd."
+    "corrections": "Persoonlijke BASE-indeling, LOWER met F1-F12 en navigatie links, RAISE met Bluetooth en navigatie rechts. LOWER en RAISE hebben Delete / Enter op posities 54 / 55. Rechter encoder: volgende/vorige en play/pauze. LOWER + RAISE schakelt GAME aan/uit via een globale combo (posities 53 + 56, binnen 200 ms); Studio is uitgeschakeld voor Sofle; F12 staat op LOWER linksboven; rechts zijn ], |, backslash en min toegevoegd; RAISE naast P is nog niet afzonderlijk bevestigd."
   },
   "layers": [
     {
@@ -253,7 +254,7 @@
       "id": "LOWER",
       "name": "lower_layer",
       "bindings": [
-        "&to BASE",
+        "&kp F12",
         "&kp F1",
         "&kp F2",
         "&kp F3",
@@ -276,7 +277,7 @@
         "&trans",
         "&trans",
         "&trans",
-        "&kp F12",
+        "&kp RBKT",
         "&trans",
         "&kp LEFT",
         "&kp DOWN",
@@ -288,6 +289,7 @@
         "&trans",
         "&trans",
         "&trans",
+        "&kp PIPE",
         "&trans",
         "&trans",
         "&trans",
@@ -300,9 +302,8 @@
         "&trans",
         "&trans",
         "&trans",
-        "&trans",
-        "&trans",
-        "&trans",
+        "&kp BSLH",
+        "&kp MINUS",
         "&trans",
         "&trans",
         "&trans",
@@ -485,9 +486,9 @@ const ALIASES = {GRAVE:'`',ESC:'Esc',TAB:'Tab',BSPC:'Bksp',SEMI:';',SQT:"'",LSHF
 /* EDIT LAYER NAMES AND ACTIVATION INSTRUCTIONS HERE. */
 const LAYER_INFO = [
   {id:'BASE',title:'Basis / typen',type:'Standaard',purpose:'QWERTY, cijfers, leestekens en modifiers voor dagelijks gebruik.',enable:'Automatisch actief na het inschakelen. Dit is de basis onder de andere lagen.',short:'Automatisch actief',exit:'Houd de linker LOWER- of rechter RAISE-duimtoets vast om tijdelijk een andere laag te gebruiken.'},
-  {id:'LOWER',title:'Functietoetsen & navigatie',type:'Vasthouden',purpose:'F1–F11 bovenaan en F12 rechts naast P. BASE linksboven; Home, pijltjes en End links. Druk LOWER + RAISE samen in om GAME aan of uit te zetten. Delete en Enter op de twee binnenste duimtoetsen. De overige posities geven door naar BASE.',enable:'Houd de linker LOWER-duimtoets vast: de toets direct naast je linker Spatie.',short:'Linker LOWER vasthouden',exit:'Laat LOWER los om terug te keren naar BASE, tenzij je GAME hebt geactiveerd.'},
+  {id:'LOWER',title:'Functietoetsen & navigatie',type:'Vasthouden',purpose:'F12 linksboven, gevolgd door F1–F11. Home, pijltjes en End links; rechts ], |, backslash en min. Druk LOWER + RAISE samen in om GAME aan of uit te zetten. Delete en Enter op de twee binnenste duimtoetsen. De overige posities geven door naar BASE.',enable:'Houd de linker LOWER-duimtoets vast: de toets direct naast je linker Spatie.',short:'Linker LOWER vasthouden',exit:'Laat LOWER los om terug te keren naar BASE, tenzij je GAME hebt geactiveerd.'},
   {id:'RAISE',title:'Navigatie & Bluetooth',type:'Vasthouden',purpose:'Bluetooth-profielen linksboven, F6–F11 rechtsboven en Home, pijltjes, End en Page Up/Down rechts. Delete en Enter op de twee binnenste duimtoetsen. Druk LOWER + RAISE samen in om GAME aan of uit te zetten.',enable:'Houd de rechter RAISE-duimtoets vast: de toets direct naast je rechter Backspace.',short:'Rechter RAISE vasthouden',exit:'Laat RAISE los om terug te keren naar BASE, tenzij je GAME hebt geactiveerd.',note:'BT 1 t/m 5 gebruikt intern profielindices 0 t/m 4. De toets naast P op RAISE moet nog bevestigd worden; voorlopig erft die [ uit BASE.'},
-  {id:'GAME',title:'Gaming',type:'Aan/uit',purpose:'Een vaste indeling met het linker toetsblok één kolom naar rechts. Beide helften blijven beschikbaar.',enable:'Druk LOWER + RAISE samen in en laat beide los: GAME blijft actief. Herhaal dezelfde combinatie om GAME uit te zetten.',short:'LOWER + RAISE · aan/uit',exit:'Druk LOWER + RAISE opnieuw samen in om GAME uit te zetten. LOWER + linksboven en de twee bovenste hoektoetsen brengen je ook naar BASE.',note:'De laag blijft actief zonder vasthouden, tot je de combo herhaalt of BASE kiest. De linker LOWER-duimtoets blijft beschikbaar en vervangt hier de eerdere 5. A en B zijn alternatieven voor dezelfde vierde laag. Variant A staat in de bijgeleverde keymap. Blauw markeert hier WASD. Voor tekstchat keer je terug naar BASE.'}
+  {id:'GAME',title:'Gaming',type:'Aan/uit',purpose:'Een vaste indeling met het linker toetsblok één kolom naar rechts. Beide helften blijven beschikbaar.',enable:'Druk LOWER + RAISE samen in en laat beide los: GAME blijft actief. Herhaal dezelfde combinatie om GAME uit te zetten.',short:'LOWER + RAISE · aan/uit',exit:'Druk LOWER + RAISE opnieuw samen in om GAME uit te zetten. De twee bovenste hoektoetsen in GAME brengen je ook naar BASE.',note:'De laag blijft actief zonder vasthouden, tot je de combo herhaalt of BASE kiest. De linker LOWER-duimtoets blijft beschikbaar en vervangt hier de eerdere 5. A en B zijn alternatieven voor dezelfde vierde laag. Variant A staat in de bijgeleverde keymap. Blauw markeert hier WASD. Voor tekstchat keer je terug naar BASE.'}
 ];
 let variant='shift', showEffective=true;
 const selections={};

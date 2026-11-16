@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT
+description: Set the right-hand Nyffels display artwork over the split link
+compatible: "nyffels,display-art"
+include: one_param.yaml

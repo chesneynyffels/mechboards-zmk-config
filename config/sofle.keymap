@@ -7,6 +7,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <behaviors/nyffels_art.dtsi>
 
 #define BASE 0
 #define LOWER 1
@@ -63,15 +64,15 @@
             display-name = "lower";
             // Transparent positions inherit from BASE.
             // Left / right halves; encoder clicks are between the bottom rows.
-            // | BASE| F1   | F2   | F3    | F4 | F5 |   | F6 | F7 | F8 | F9 | F10 | F11 |
-            // |  v  | HOME | UP   | END   | v  | v  |   | v  | v  | v  | v  | v   | F12 |
-            // |  v  | LEFT | DOWN | RIGHT | v  | v  |   | v  | v  | v  | v  | v   | v   |
+            // | F12 | F1   | F2   | F3    | F4 | F5 |   | F6 | F7 | F8 | F9 | F10 | F11 |
+            // |  v  | HOME | UP   | END   | v  | v  |   | v  | v  | v  | v  | v   |  ]  |
+            // |  v  | LEFT | DOWN | RIGHT | v  | v  |   | v  | v  | v  | v  | v   | PIPE|
             // Thumb positions 54 / 55 are Delete / Enter. LOWER + RAISE is a global GAME toggle; remaining positions are transparent.
             bindings = <
-                &to BASE    &kp F1    &kp F2    &kp F3      &kp F4    &kp F5                    &kp F6    &kp F7   &kp F8    &kp F9    &kp F10   &kp F11
-                &trans &kp HOME    &kp UP    &kp END      &trans    &trans                    &trans    &trans   &trans    &trans    &trans    &kp F12
-                &trans    &kp LEFT  &kp DOWN    &kp RIGHT    &trans  &trans                 &trans &trans &trans &trans  &trans  &trans
-                &trans    &trans &trans &trans &trans  &trans   &trans &trans  &trans  &trans &trans  &trans &trans  &trans
+                &kp F12    &kp F1    &kp F2    &kp F3      &kp F4    &kp F5                    &kp F6    &kp F7   &kp F8    &kp F9    &kp F10   &kp F11
+                &trans &kp HOME    &kp UP    &kp END      &trans    &trans                    &trans    &trans   &trans    &trans    &trans    &kp RBKT
+                &trans    &kp LEFT  &kp DOWN    &kp RIGHT    &trans  &trans                 &trans &trans &trans &trans  &trans  &kp PIPE
+                &trans    &trans &trans &trans &trans  &trans   &trans &trans  &trans  &trans &trans  &trans &kp BSLH  &kp MINUS
                                     &trans    &trans      &trans    &trans     &kp DEL &kp RET  &trans    &trans   &trans    &trans
             >;
             sensor-bindings = <
@@ -104,7 +105,7 @@
         gaming_layer {
             display-name = "gaming";
             // Press LOWER + RAISE together to toggle GAME on/off; release both before repeating.
-            // LOWER + top-left returns to BASE; either top corner also returns directly.
+            // Either top corner in GAME returns directly to BASE.
             // Position 53 remains LOWER instead of the previous gaming number 5.
             bindings = <
                 &to BASE &kp ESC &kp N1 &kp N2 &kp N3 &kp N4 &trans &trans &trans &trans &trans &to BASE

@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT
+
+menuconfig NYFFELS_DISPLAY_ART
+    bool "Nyffels right-hand display artwork"
+    depends on SHIELD_NICE_VIEW_GEM && ZMK_DISPLAY && ZMK_SPLIT_BLE
+    help
+      Keep the existing GEM status screen and replace only the right-hand
+      decorative artwork. Synchronize GAME state over the existing split link.
+
+if NYFFELS_DISPLAY_ART
+
+config NYFFELS_DISPLAY_GAME_LAYER
+    int "GAME layer index"
+    range 0 31
+    default 3
+
+endif
