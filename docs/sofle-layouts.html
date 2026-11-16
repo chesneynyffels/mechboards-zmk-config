@@ -178,7 +178,7 @@
     "url": "https://github.com/chesneynyffels/mechboards-zmk-config/blob/f33c8122b4c77cba9d39e8ca2bf7946b1bf16be8/config/sofle.keymap",
     "localFile": "config/sofle.keymap",
     "status": "Configuratie gebaseerd op de vermelde broncommit, met de bevestigde persoonlijke wijzigingen",
-    "corrections": "Persoonlijke BASE-indeling, LOWER met F1-F12 en navigatie links, RAISE met Bluetooth en navigatie rechts. LOWER en RAISE hebben Delete / Enter op posities 54 / 55. Rechter encoder: volgende/vorige en play/pauze. LOWER + RAISE schakelt GAME aan/uit via een globale combo (posities 53 + 56, binnen 200 ms); Studio is uitgeschakeld voor Sofle; F12 staat op LOWER linksboven; rechts zijn ], |, backslash en min toegevoegd; RAISE naast P is nog niet afzonderlijk bevestigd."
+    "corrections": "Persoonlijke BASE-indeling, LOWER met F1-F12 en navigatie links, RAISE met Bluetooth en navigatie rechts. LOWER en RAISE hebben Delete / Enter op posities 54 / 55. Rechter encoder: volgende/vorige en play/pauze. LOWER + RAISE schakelt GAME aan/uit via een globale combo (posities 53 + 56, binnen 200 ms); Studio is uitgeschakeld voor Sofle; F12 staat op LOWER linksboven; rechts zijn ], |, backslash en min toegevoegd; RAISE naast P is nog niet afzonderlijk bevestigd. GAME: cijfers 1–5 op hun normale bovenste posities; Esc helemaal links op de tweede rij."
   },
   "layers": [
     {
@@ -396,18 +396,18 @@
       "name": "gaming_layer",
       "bindings": [
         "&to BASE",
-        "&kp ESC",
         "&kp N1",
         "&kp N2",
         "&kp N3",
         "&kp N4",
+        "&kp N5",
         "&trans",
         "&trans",
         "&trans",
         "&trans",
         "&trans",
         "&to BASE",
-        "&none",
+        "&kp ESC",
         "&kp TAB",
         "&kp Q",
         "&kp W",
@@ -489,7 +489,7 @@ const LAYER_INFO = [
   {id:'BASE',title:'Basis / typen',type:'Standaard',purpose:'QWERTY, cijfers, leestekens en modifiers voor dagelijks gebruik.',enable:'Automatisch actief na het inschakelen. Dit is de basis onder de andere lagen.',short:'Automatisch actief',exit:'Houd de linker LOWER- of rechter RAISE-duimtoets vast om tijdelijk een andere laag te gebruiken.'},
   {id:'LOWER',title:'Functietoetsen & navigatie',type:'Vasthouden',purpose:'F12 linksboven, gevolgd door F1–F11. Home, pijltjes en End links; rechts ], |, backslash en min. Druk LOWER + RAISE samen in om GAME aan of uit te zetten. Delete en Enter op de twee binnenste duimtoetsen. De overige posities geven door naar BASE.',enable:'Houd de linker LOWER-duimtoets vast: de toets direct naast je linker Spatie.',short:'Linker LOWER vasthouden',exit:'Laat LOWER los om terug te keren naar BASE, tenzij je GAME hebt geactiveerd.'},
   {id:'RAISE',title:'Navigatie & Bluetooth',type:'Vasthouden',purpose:'Bluetooth-profielen linksboven, F6–F11 rechtsboven en Home, pijltjes, End en Page Up/Down rechts. Delete en Enter op de twee binnenste duimtoetsen. Druk LOWER + RAISE samen in om GAME aan of uit te zetten.',enable:'Houd de rechter RAISE-duimtoets vast: de toets direct naast je rechter Backspace.',short:'Rechter RAISE vasthouden',exit:'Laat RAISE los om terug te keren naar BASE, tenzij je GAME hebt geactiveerd.',note:'BT 1 t/m 5 gebruikt intern profielindices 0 t/m 4. De toets naast P op RAISE moet nog bevestigd worden; voorlopig erft die [ uit BASE.'},
-  {id:'GAME',title:'Gaming',type:'Aan/uit',purpose:'Een vaste indeling met het linker toetsblok één kolom naar rechts. Beide helften blijven beschikbaar.',enable:'Druk LOWER + RAISE samen in en laat beide los: GAME blijft actief. Herhaal dezelfde combinatie om GAME uit te zetten.',short:'LOWER + RAISE · aan/uit',exit:'Druk LOWER + RAISE opnieuw samen in om GAME uit te zetten. De twee bovenste hoektoetsen in GAME brengen je ook naar BASE.',note:'De laag blijft actief zonder vasthouden, tot je de combo herhaalt of BASE kiest. De linker LOWER-duimtoets blijft beschikbaar en vervangt hier de eerdere 5. A en B zijn alternatieven voor dezelfde vierde laag. Variant A staat in de bijgeleverde keymap. Blauw markeert hier WASD. Voor tekstchat keer je terug naar BASE.'}
+  {id:'GAME',title:'Gaming',type:'Aan/uit',purpose:'Het linker letterblok schuift één kolom naar rechts. Cijfers 1–5 blijven op hun normale posities; Esc staat helemaal links op de tweede rij. Beide helften blijven beschikbaar.',enable:'Druk LOWER + RAISE samen in en laat beide los: GAME blijft actief. Herhaal dezelfde combinatie om GAME uit te zetten.',short:'LOWER + RAISE · aan/uit',exit:'Druk LOWER + RAISE opnieuw samen in om GAME uit te zetten. De twee bovenste hoektoetsen in GAME brengen je ook naar BASE.',note:'De laag blijft actief zonder vasthouden, tot je de combo herhaalt of BASE kiest. De linker LOWER-duimtoets blijft beschikbaar en vervangt hier de eerdere 5. A en B zijn alternatieven voor dezelfde vierde laag. Variant A staat in de bijgeleverde keymap. Blauw markeert hier WASD. Voor tekstchat keer je terug naar BASE.'}
 ];
 let variant='shift', showEffective=true;
 const selections={};
@@ -588,7 +588,7 @@ function render(){
     board(document.getElementById('board-'+id+'-left'),id,'left');
     board(document.getElementById('board-'+id+'-right'),id,'right');
   });
-  document.getElementById('game-variant-note').textContent=variant==='relaxed'?'Variant B: vooruit W op fysieke D, achteruit S op C, links A op S en rechts D op F. X verhuist naar fysieke E.':'Variant A: WASD op de fysieke ESDF-posities. De overige linkertoetsen schuiven mee.';
+  document.getElementById('game-variant-note').textContent=variant==='relaxed'?'Variant B: vooruit W op fysieke D, achteruit S op C, links A op S en rechts D op F. X verhuist naar fysieke E.':'Variant A: WASD op de fysieke ESDF-posities. Cijfers 1–5 op hun normale posities; Esc helemaal links op de tweede rij.';
   document.getElementById('game-code').textContent=gameCode();document.getElementById('copy-status').textContent='';updateSelection();updateReport();
   const entries=[];
   Object.entries(allLayers()).filter(([id])=>id!=='GAME').forEach(([id,bindings])=>bindings.forEach((binding,index)=>{const match=binding.match(/^&(to|mo|tog) GAME$/);if(match)entries.push(`${id} · ${positionName(index)} · ${match[1]==='to'?'blijvend':match[1]==='mo'?'zolang vasthouden':'aan/uit'}`);}));

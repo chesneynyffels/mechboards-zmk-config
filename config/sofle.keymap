@@ -108,8 +108,8 @@
             // Either top corner in GAME returns directly to BASE.
             // Position 53 remains LOWER instead of the previous gaming number 5.
             bindings = <
-                &to BASE &kp ESC &kp N1 &kp N2 &kp N3 &kp N4 &trans &trans &trans &trans &trans &to BASE
-                &none &kp TAB &kp Q &kp W &kp E &kp R &trans &trans &trans &trans &trans &trans
+                &to BASE &kp N1 &kp N2 &kp N3 &kp N4 &kp N5 &trans &trans &trans &trans &trans &to BASE
+                &kp ESC &kp TAB &kp Q &kp W &kp E &kp R &trans &trans &trans &trans &trans &trans
                 &none &kp LSHFT &kp A &kp S &kp D &kp F &trans &trans &trans &trans &trans &trans
                 &none &kp LCTRL &kp Z &kp X &kp C &kp V &trans &trans &trans &trans &trans &trans &trans &trans
                 &none &kp G &kp B &mo LOWER &kp SPACE &trans &none &trans &trans &none
